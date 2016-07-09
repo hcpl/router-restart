@@ -124,8 +124,6 @@ Dry-run checkouts:
 ```bash
 $ rr -s
 # or
-$ router-restart --dry-run
-# or
 $ router-restart --simulate
 ```
 

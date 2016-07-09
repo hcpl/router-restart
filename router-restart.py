@@ -42,7 +42,6 @@ config_file_help = ('options defined in this file are taken\n'
 reboot_help = ('if specified, reboot will happen\n'
                'instead of reconnection')
 simulate_help = 'no action; simulate events only'
-dry_run_help = 'same as --simulate'
 v_help = ("sets the verbosity level equal to\n"
           "the number of 'v' letters")
 verbose_help = ('set the verbosity level equal to\n'
@@ -78,10 +77,8 @@ def create_args_parser():
                         help=config_file_help)
     parser.add_argument("-r", "--reboot",
                         action='store_true', help=reboot_help)
-    parser.add_argument("-s", "--simulate", dest='dry_run',
+    parser.add_argument("-s", "--simulate",
                         action='store_true', help=simulate_help)
-    parser.add_argument("--dry-run", dest='dry_run',
-                        action='store_true', help=dry_run_help)
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-v", dest='verbosity',
@@ -132,7 +129,7 @@ def apply_configs(args, config_file):
 
 # Actual working is done here
 # This function makes a single request
-def make_request(host, port, username, password, option_key, dry_run):
+def make_request(host, port, username, password, option_key, simulate):
     if option_key in ('Connect', 'Disconnect'):
         menu_name = 'Status'
         option = option_key + '=any_string&wan=1'
@@ -154,7 +151,7 @@ def make_request(host, port, username, password, option_key, dry_run):
     try:
         logger.info('Trying to connect to the router...')
 
-        if dry_run:
+        if simulate:
             resp = requests.Response()
             resp.status_code = 200
         else:
@@ -188,12 +185,12 @@ def make_request(host, port, username, password, option_key, dry_run):
 
 # Routes to make_request() function based on whether
 # we are rebooting device or not
-def process_action(host, port, username, password, reboot, dry_run):
+def process_action(host, port, username, password, reboot, simulate):
     if reboot:
-        make_request(host, port, username, password, 'Reboot', dry_run)
+        make_request(host, port, username, password, 'Reboot', simulate)
     else:
-        make_request(host, port, username, password, 'Disconnect', dry_run)
-        make_request(host, port, username, password, 'Connect', dry_run)
+        make_request(host, port, username, password, 'Disconnect', simulate)
+        make_request(host, port, username, password, 'Connect', simulate)
 
 
 # The main function
@@ -205,7 +202,7 @@ def main():
     apply_configs(args, args.config_file)
 
     process_action(args.host, args.port, args.username,
-                   args.password, args.reboot, args.dry_run)
+                   args.password, args.reboot, args.simulate)
 
 if __name__ == '__main__':
     main()
