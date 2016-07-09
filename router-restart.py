@@ -33,14 +33,14 @@ description = ('Authorizes as the administrator on your router\n'
                + '\n'.join('  * %s\n' % brand +
                            '\n'.join('    - %s' % model for model in models)
                            for (brand, models) in SUPPORTED_DEVICES.items()))
-host_help = 'specify the host IP or the host name'
-port_help = 'specify the port'
-username_help = 'specify the username'
-password_help = 'specify the password'
+
+host_help = 'router IP or router host name'
+port_help = 'router connection port'
+username_help = 'router username'
+password_help = 'router password'
 config_file_help = ('options defined in this file are taken\n'
                     'if not specified explicitly by command-line options')
-reboot_help = ('if specified, reboot will happen\n'
-               'instead of reconnection')
+reboot_help = ('if set, reboot will happen instead of reconnection')
 simulate_help = 'no action; simulate events only'
 v_help = ("sets the verbosity level equal to\n"
           "the number of 'v' letters")
